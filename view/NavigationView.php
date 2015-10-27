@@ -11,7 +11,7 @@ class NavigationView{
     public function getGameLink(){
         return "<a href='?".self::$newGame."'>New Game</a>";
     }
-    public function userWantToStartNewGame(){
+    public function userWantsToStartNewGame(){
         if(isset($_GET[self::$newGame])){
             return true;
         }

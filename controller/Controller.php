@@ -23,7 +23,14 @@ class Controller{
     }
 
     public function doGame(){
-        if($this->nav->userWantToStartNewGame()){
+        if($this->nav->userWantsToStartNewGame()){
+            if ($this->gameView->formIsSubmitted()) {
+                $this->gameView->handleBoxes();
+                $this->gameView->checkIfFormIsEmpty();
+                $this->gameView->computerMove();
+                $this->gameView->checkIfPlayerIsWinner();
+                echo $this->gameView->getWinner();
+            }
             $this->view = $this->html->getHTML("Tick Tack Toe", $this->nav, $this->gameView->generateGameBoard());
         }
         else{
