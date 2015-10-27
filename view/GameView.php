@@ -9,12 +9,25 @@ class GameView{
         $this->gameBoard = $gameBoard;
     }
     public function generateGameBoard(){
-        $rows = $this->gameBoard->getRows();
-        $boxes = $this->gameBoard->getBoxes();
-        $ret = "<table>";
-
-        for($i=1;$i==$rows;$i++){
-            $ret.="<tr></tr>";
-        }
+        $ret = "<table>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>";
+        echo $ret;
     }
 }

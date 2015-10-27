@@ -9,27 +9,28 @@ require_once("view/GameView.php");
 require_once("model/Board.php");
 
 class Controller{
+    private $view;
     private $html;
     private $nav;
     private $board;
+    private $gameView;
 
     public function __construct(){
         $this->html = new \view\HTMLView("utf-8");
         $this->nav = new \view\NavigationView();
         $this->board = new \model\Board(3, 3);
+        $this->gameView = new \view\GameView($this->board);
     }
 
     public function doGame(){
         if($this->nav->userWantToStartNewGame()){
-            echo "start new game";
-            $gameView = new \view\GameView($this->board);
-            $gameView->generateGameBoard();
+            $this->view = $this->html->getHTML("Tick Tack Toe", $this->gameView->generateGameBoard(), $this->nav);
         }
         else{
-            echo "welcome";
+            $this->view = $this->html->getHTML("Tick Tack Toe", $this->nav->presentStartingPage(), $this->nav);
         }
     }
     public function getView(){
-        return $this->html->getHTML("Tick Tack Toe", $this->nav->presentStartingPage(), $this->nav);
+        echo $this->view;
     }
 }
