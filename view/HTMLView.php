@@ -9,7 +9,7 @@ class HTMLView{
     public function __construct($charset){
         $this->charset = $charset;
     }
-    public function getHTML($title, $body, \view\NavigationView $nav)
+    public function getHTML($title, \view\NavigationView $nav, $body)
     {
         $link = $nav->getGameLink();
         echo "<!DOCTYPE html>

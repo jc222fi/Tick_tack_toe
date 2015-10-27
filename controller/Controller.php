@@ -24,13 +24,13 @@ class Controller{
 
     public function doGame(){
         if($this->nav->userWantToStartNewGame()){
-            $this->view = $this->html->getHTML("Tick Tack Toe", $this->gameView->generateGameBoard(), $this->nav);
+            $this->view = $this->html->getHTML("Tick Tack Toe", $this->nav, $this->gameView->generateGameBoard());
         }
         else{
-            $this->view = $this->html->getHTML("Tick Tack Toe", $this->nav->presentStartingPage(), $this->nav);
+            $this->view = $this->html->getHTML("Tick Tack Toe", $this->nav, $this->nav->presentStartingPage());
         }
     }
     public function getView(){
-        echo $this->view;
+        return $this->view;
     }
 }
