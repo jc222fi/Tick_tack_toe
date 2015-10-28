@@ -2,14 +2,16 @@
 
 namespace view;
 
+require_once("model/Winner.php");
 class GameView{
-    private $gameBoard;
+    private $players = array();
     private $box = array();
     private $blank;
-    private $winner = '';
+    private $winner;
 
-    public function __construct(\model\Board $gameBoard){
-        $this->gameBoard = $gameBoard;
+    public function __construct(\model\Players $players){
+        $this->players = $players;
+        $this->winner = new \model\Winner();
     }
     public function generateGameBoard(){
         $ret = "<form id='gameBoard' method='post' >";
@@ -45,14 +47,17 @@ class GameView{
             }
         }
     }
-    public function checkIfPlayerIsWinner(){
+    public function checkWhoIsWinner(){
+        $this->winner->checkWinner($this->box);
+    }
+    /*public function checkIfPlayerIsWinner(){
         if(($this->playerInARow())||
             ($this->playerInAColumn())||
             ($this->playerDiagonal())){
             $this->winner = "X";
         }
-    }
-    private function playerInARow(){
+    }*/
+    /*private function playerInARow(){
         if(($this->box[0] == 'X' && $this->box[1] == 'X' && $this->box[2] == 'X')||
             ($this->box[3] == 'X' && $this->box[4] == 'X' && $this->box[5] == 'X')||
             ($this->box[6] == 'X' && $this->box[7] == 'X' && $this->box[8] == 'X')){
@@ -74,8 +79,8 @@ class GameView{
             return true;
         }
         return false;
-    }
-    private function computerInARow(){
+    }*/
+    /*private function computerInARow(){
         if(($this->box[0] == 'O' && $this->box[1] == 'O' && $this->box[2] == 'O')||
             ($this->box[3] == 'O' && $this->box[4] == 'O' && $this->box[5] == 'O')||
             ($this->box[6] == 'O' && $this->box[7] == 'O' && $this->box[8] == 'O')){
@@ -97,7 +102,7 @@ class GameView{
             return true;
         }
         return false;
-    }
+    }*/
     public function computerMove(){
         if($this->blank == 1 && $this->winner == ''){
             $i = rand(0,8);
@@ -105,11 +110,12 @@ class GameView{
                 $i = rand(0,8);
             }
             $this->box[$i] = "O";
-            if(($this->computerInARow())||
+            $this->checkWhoIsWinner();
+            /*if(($this->computerInARow())||
                 ($this->computerInAColumn())||
                 ($this->computerDiagonal())){
                 $this->winner = "O";
-            }
+            }*/
         }
     }
     public function formIsSubmitted(){
@@ -119,7 +125,7 @@ class GameView{
         return false;
     }
     public function getWinner(){
-        //var_dump($this->winner);
-        return "<p>". $this->winner ."</p>";
+        $winner = $this->winner->getWinner();
+        return "<p>". $winner ."</p>";
     }
 }
