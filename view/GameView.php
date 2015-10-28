@@ -5,8 +5,7 @@ namespace view;
 require_once("model/Winner.php");
 class GameView{
     private $players = array();
-    private $box = array();
-    private $blank;
+    private $boxes = array();
     private $winner;
 
     public function __construct(\model\Players $players){
@@ -14,108 +13,55 @@ class GameView{
         $this->winner = new \model\Winner();
     }
     public function generateGameBoard(){
+        $pTag = "<p>Type 'X' in the box you wish to put your move in, then click the submit button.</p>";
         $ret = "<form id='gameBoard' method='post' >";
         $ret2 = "";
 
         for($i = 0; $i <=8; $i++){
-            $ret2 .= "<input type='text' name='box". $i ."' value='". $this->box[$i] ."'/>";
+            $ret2 .= "<input type='text' name='box". $i ."' value='". $this->boxes[$i] ."'/>";
             if($i==2 || $i==5 || $i==8){
                 $ret2 .="<br>";
             }
         }
-		$ret3= "    <input type='submit' name='submit' value='Submit'/>
+        if ($this->winner->getWinner() == null) {
+            $ret3 = "    <input type='submit' name='submit' value='Submit'/>
                 </form>";
-        return $ret . $ret2 . $ret3;
+        }
+        else {
+            $ret3 = $this->getWinner();
+        }
+        return $pTag . $ret . $ret2 . $ret3;
     }
     public function handleBoxes(){
-        $this->box = array('','','','','','','','','');
-        $this->box[0] = $_POST["box0"];
-        $this->box[1] = $_POST["box1"];
-        $this->box[2] = $_POST["box2"];
-        $this->box[3] = $_POST["box3"];
-        $this->box[4] = $_POST["box4"];
-        $this->box[5] = $_POST["box5"];
-        $this->box[6] = $_POST["box6"];
-        $this->box[7] = $_POST["box7"];
-        $this->box[8] = $_POST["box8"];
+        $this->boxes = array('','','','','','','','','');
+        $this->boxes[0] = $_POST["box0"];
+        $this->boxes[1] = $_POST["box1"];
+        $this->boxes[2] = $_POST["box2"];
+        $this->boxes[3] = $_POST["box3"];
+        $this->boxes[4] = $_POST["box4"];
+        $this->boxes[5] = $_POST["box5"];
+        $this->boxes[6] = $_POST["box6"];
+        $this->boxes[7] = $_POST["box7"];
+        $this->boxes[8] = $_POST["box8"];
     }
-    public function checkIfFormIsEmpty(){
-        $this->blank = 0;
+    private function checkIfFormHasEmptyBox(){
         for($i = 0; $i <=8; $i++){
-            if($this->box[$i] == ''){
-                $this->blank = 1;
+            if($this->boxes[$i] == ''){
+                return true;
             }
         }
+        return false;
     }
     public function checkWhoIsWinner(){
-        $this->winner->checkWinner($this->box);
+        $this->winner->checkWinner($this->boxes);
     }
-    /*public function checkIfPlayerIsWinner(){
-        if(($this->playerInARow())||
-            ($this->playerInAColumn())||
-            ($this->playerDiagonal())){
-            $this->winner = "X";
-        }
-    }*/
-    /*private function playerInARow(){
-        if(($this->box[0] == 'X' && $this->box[1] == 'X' && $this->box[2] == 'X')||
-            ($this->box[3] == 'X' && $this->box[4] == 'X' && $this->box[5] == 'X')||
-            ($this->box[6] == 'X' && $this->box[7] == 'X' && $this->box[8] == 'X')){
-            return true;
-        }
-        return false;
-    }
-    private function playerInAColumn(){
-        if(($this->box[0] == 'X' && $this->box[3] == 'X' && $this->box[6] == 'X')||
-            ($this->box[1] == 'X' && $this->box[4] == 'X' && $this->box[7] == 'X')||
-            ($this->box[2] == 'X' && $this->box[5] == 'X' && $this->box[8] == 'X')){
-            return true;
-        }
-        return false;
-    }
-    private function playerDiagonal(){
-        if(($this->box[0] == 'X' && $this->box[4] == 'X' && $this->box[8] == 'X')||
-            ($this->box[2] == 'X' && $this->box[4] == 'X' && $this->box[6] == 'X')){
-            return true;
-        }
-        return false;
-    }*/
-    /*private function computerInARow(){
-        if(($this->box[0] == 'O' && $this->box[1] == 'O' && $this->box[2] == 'O')||
-            ($this->box[3] == 'O' && $this->box[4] == 'O' && $this->box[5] == 'O')||
-            ($this->box[6] == 'O' && $this->box[7] == 'O' && $this->box[8] == 'O')){
-            return true;
-        }
-        return false;
-    }
-    private function computerInAColumn(){
-        if(($this->box[0] == 'O' && $this->box[3] == 'O' && $this->box[6] == 'O')||
-            ($this->box[1] == 'O' && $this->box[4] == 'O' && $this->box[7] == 'O')||
-            ($this->box[2] == 'O' && $this->box[5] == 'O' && $this->box[8] == 'O')){
-            return true;
-        }
-        return false;
-    }
-    private function computerDiagonal(){
-        if(($this->box[0] == 'O' && $this->box[4] == 'O' && $this->box[8] == 'O')||
-            ($this->box[2] == 'O' && $this->box[4] == 'O' && $this->box[6] == 'O')){
-            return true;
-        }
-        return false;
-    }*/
-    public function computerMove(){
-        if($this->blank == 1 && $this->winner == ''){
+    public function computerMove(\model\Player $computer){
+        if($this->checkIfFormHasEmptyBox() && $this->winner->getWinner() == null){
             $i = rand(0,8);
-            while($this->box[$i] != ''){
+            while($this->boxes[$i] != ''){
                 $i = rand(0,8);
             }
-            $this->box[$i] = "O";
-            $this->checkWhoIsWinner();
-            /*if(($this->computerInARow())||
-                ($this->computerInAColumn())||
-                ($this->computerDiagonal())){
-                $this->winner = "O";
-            }*/
+            $this->boxes[$i] = $computer->getSign();
         }
     }
     public function formIsSubmitted(){
@@ -126,6 +72,6 @@ class GameView{
     }
     public function getWinner(){
         $winner = $this->winner->getWinner();
-        return "<p>". $winner ."</p>";
+        return "<p>Grattis". $winner ."</p>";
     }
 }

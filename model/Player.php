@@ -16,7 +16,4 @@ class Player{
     public function getSign(){
         return $this->sign;
     }
-    public function move(){
-
-    }
 }

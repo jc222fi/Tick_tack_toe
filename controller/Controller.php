@@ -33,9 +33,7 @@ class Controller{
             $this->gameView = new \view\GameView($players);
             if ($this->gameView->formIsSubmitted()) {
                 $this->gameView->handleBoxes();
-
-                $this->gameView->checkIfFormIsEmpty();
-                $this->gameView->computerMove();
+                $this->gameView->computerMove($computer);
                 $this->gameView->checkWhoIsWinner();
                 echo $this->gameView->getWinner();
             }
