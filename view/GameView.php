@@ -4,12 +4,12 @@ namespace view;
 
 require_once("model/Winner.php");
 class GameView{
-    private $players = array();
+    //private $players = array();
     private $boxes = array();
     private $winner;
 
-    public function __construct(\model\Players $players){
-        $this->players = $players;
+    public function __construct(){
+        //$this->players = $players;
         $this->winner = new \model\Winner();
     }
     public function generateGameBoard(){
@@ -34,15 +34,10 @@ class GameView{
     }
     public function handleBoxes(){
         $this->boxes = array('','','','','','','','','');
-        $this->boxes[0] = $_POST["box0"];
-        $this->boxes[1] = $_POST["box1"];
-        $this->boxes[2] = $_POST["box2"];
-        $this->boxes[3] = $_POST["box3"];
-        $this->boxes[4] = $_POST["box4"];
-        $this->boxes[5] = $_POST["box5"];
-        $this->boxes[6] = $_POST["box6"];
-        $this->boxes[7] = $_POST["box7"];
-        $this->boxes[8] = $_POST["box8"];
+        for($i = 0; $i <=8; $i++)
+        {
+            $this->boxes[$i] = $_POST["box$i"];
+        }
     }
     private function checkIfFormHasEmptyBox(){
         for($i = 0; $i <=8; $i++){
@@ -52,8 +47,11 @@ class GameView{
         }
         return false;
     }
-    public function checkWhoIsWinner(){
-        $this->winner->checkWinner($this->boxes);
+    public function checkWhoIsWinner(\model\Players $playersArray){
+        $players = $playersArray->getAllPlayers();
+        foreach ($players as $player) {
+            $this->winner->checkWinner($this->boxes, $player);
+        }
     }
     public function computerMove(\model\Player $computer){
         if($this->checkIfFormHasEmptyBox() && $this->winner->getWinner() == null){
@@ -72,6 +70,14 @@ class GameView{
     }
     public function getWinner(){
         $winner = $this->winner->getWinner();
-        return "<p>Grattis". $winner ."</p>";
+        if ($winner != null && $winner->getName() != "Computer") {
+            return "<p>Congratulations " . $winner->getName() . "! You won this round.</p>";
+        }
+        else if($winner != null && $winner->getName() === "Computer") {
+            return "<p>Sorry, the " . $winner->getName() . " won this round</p>";;
+        }
+        else {
+            return "";
+        }
     }
 }

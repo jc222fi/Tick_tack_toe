@@ -16,4 +16,7 @@ class Players{
         }
         return null;
     }
+    public function getAllPlayers(){
+        return $this->players;
+    }
 }

@@ -23,18 +23,18 @@ class Controller{
 
     public function doGame(){
         if($this->nav->userWantsToStartNewGame()){
-            $player = new \model\Player("Player1", "X");
+            $player = new \model\Player("Player", "X");
             $computer = new \model\Player("Computer", "O");
             $players = new \model\Players();
 
             $players->addPlayer($player);
             $players->addPlayer($computer);
 
-            $this->gameView = new \view\GameView($players);
+            $this->gameView = new \view\GameView();
             if ($this->gameView->formIsSubmitted()) {
                 $this->gameView->handleBoxes();
                 $this->gameView->computerMove($computer);
-                $this->gameView->checkWhoIsWinner();
+                $this->gameView->checkWhoIsWinner($players);
                 echo $this->gameView->getWinner();
             }
             $this->view = $this->html->getHTML("Tick Tack Toe", $this->nav, $this->gameView->generateGameBoard());
