@@ -5,11 +5,15 @@ namespace view;
 require_once("model/Winner.php");
 class GameView{
     //private $players = array();
-    private $boxes = array();
+    private $boxes;
     private $winner;
+    private $computersTurn = false;
+
+    const ALLOWED_MOVE = 1;
 
     public function __construct(){
         //$this->players = $players;
+        $this->boxes = array();
         $this->winner = new \model\Winner();
     }
     public function generateGameBoard(){
@@ -33,10 +37,35 @@ class GameView{
         return $pTag . $ret . $ret2 . $ret3;
     }
     public function handleBoxes(){
-        $this->boxes = array('','','','','','','','','');
+        //$this->boxes = array('','','','','','','','','');
+        //var_dump($this->boxes);
+        $previouslyEmptyBoxes = array();
+        $currentlyEmptyBoxes = array();
+        foreach($this->boxes as $box){
+            if($box === ""){
+                array_push($previouslyEmptyBoxes, $box);
+            }
+        }
         for($i = 0; $i <=8; $i++)
         {
-            $this->boxes[$i] = $_POST["box$i"];
+            $newBoxes[$i] = $_POST["box$i"];
+        }
+        foreach($newBoxes as $box){
+            if($box === ""){
+                array_push($currentlyEmptyBoxes, $box);
+            }
+        }
+        $attemptedMoves = count($previouslyEmptyBoxes)-count($currentlyEmptyBoxes);
+        var_dump($attemptedMoves);
+        if ($attemptedMoves === self::ALLOWED_MOVE) {
+            $this->computersTurn = true;
+            for($i = 0; $i <=8; $i++)
+            {
+                $this->boxes[$i] = $newBoxes[$i];
+            }
+        }
+        else{
+            echo "<p>Please follow the rules! You may only make one move at a time.</p>";
         }
     }
     private function checkIfFormHasEmptyBox(){
@@ -61,6 +90,7 @@ class GameView{
             }
             $this->boxes[$i] = $computer->getSign();
         }
+        return $this->boxes;
     }
     public function formIsSubmitted(){
         if(isset($_POST["submit"])){
@@ -74,10 +104,13 @@ class GameView{
             return "<p>Congratulations " . $winner->getName() . "! You won this round.</p>";
         }
         else if($winner != null && $winner->getName() === "Computer") {
-            return "<p>Sorry, the " . $winner->getName() . " won this round</p>";;
+            return "<p>Sorry, the " . $winner->getName() . " won this round.</p>";;
         }
         else {
             return "";
         }
+    }
+    public function computersTurn(){
+        return $this->computersTurn;
     }
 }

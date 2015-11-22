@@ -18,7 +18,6 @@ class Controller{
     public function __construct(){
         $this->html = new \view\HTMLView("utf-8");
         $this->nav = new \view\NavigationView();
-
     }
 
     public function doGame(){
@@ -33,9 +32,11 @@ class Controller{
             $this->gameView = new \view\GameView();
             if ($this->gameView->formIsSubmitted()) {
                 $this->gameView->handleBoxes();
-                $this->gameView->computerMove($computer);
+                if ($this->gameView->computersTurn()) {
+                    $this->gameView->computerMove($computer);
+                }
                 $this->gameView->checkWhoIsWinner($players);
-                echo $this->gameView->getWinner();
+                $this->gameView->getWinner();
             }
             $this->view = $this->html->getHTML("Tick Tack Toe", $this->nav, $this->gameView->generateGameBoard());
         }
