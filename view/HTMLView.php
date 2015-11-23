@@ -17,6 +17,7 @@ class HTMLView{
         <head>
           <meta charset=\"" . $this->charset . "\">
           <title>$title</title>
+          <link rel='stylesheet' href='../tick-tack-toe/style/style.css'>
         </head>
         <body>
           <h2>$title</h2>

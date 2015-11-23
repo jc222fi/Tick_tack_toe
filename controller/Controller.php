@@ -32,7 +32,8 @@ class Controller{
             $this->gameView = new \view\GameView();
             if ($this->gameView->formIsSubmitted()) {
                 $this->gameView->handleBoxes();
-                if ($this->gameView->computersTurn()) {
+                $this->gameView->checkWhoIsWinner($players);
+                if ($this->gameView->computersTurn() && $this->gameView->getWinner() == "") {
                     $this->gameView->computerMove($computer);
                 }
                 $this->gameView->checkWhoIsWinner($players);
