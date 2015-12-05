@@ -12,7 +12,7 @@ class AttemptedMove {
     }
 
     public function tryMove(Array $boardWithAttemptedMove){
-        $boxes = $this->initialBoard->getBoxes();
+        $boxes = $this->initialBoard->getBoxes(true);
         $previouslyEmptyBoxes = array();
         $currentlyEmptyBoxes = array();
         foreach($boxes as $box){

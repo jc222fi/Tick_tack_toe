@@ -11,8 +11,8 @@ require_once("view/GameView.php");
 require_once("model/Player.php");
 require_once("model/Players.php");
 require_once("model/Winner.php");
-require_once("model/Board.php");
 require_once("model/GameModel.php");
+require_once("model/MiniMax.php");
 
 class Controller{
     private $view;
@@ -20,14 +20,14 @@ class Controller{
     private $nav;
     private $winner;
     private $gameView;
-    private $board;
+    //private $board;
 
     public function __construct(){
         $this->html = new \view\HTMLView("utf-8");
         $this->nav = new \view\NavigationView();
-        $this->board = new \model\Board(Array('', '', '', '', '', '', '', '', ''));
+        $this->gameView = new \view\GameView();
+        //$this->board = new \model\Board(Array('', '', '', '', '', '', '', '', ''));
         $this->winner = new \model\Winner();
-        $this->gameView = new \view\GameView($this->board);
     }
 
     public function doGame(){
@@ -36,37 +36,52 @@ class Controller{
             $computer = new \model\Player("Computer", "O");
             $players = new \model\Players();
 
+            $game = new \model\GameModel($players);
+
             $players->addPlayer($player);
             $players->addPlayer($computer);
 
             if ($this->gameView->formIsSubmitted()) {
-                $tempBoard = new \model\Board(Array('', '', '', '', '', '', '', '', ''));
-                $tempBoard->setBoard($this->board->getBoxes());
+                $board = new \model\Board(Array('', '', '', '', '', '', '', '', ''));
 
-                $gameModel = new \model\GameModel($players, $tempBoard);
-                $gameModel->setPlayerTurn("Player");
-//                //var_dump($tempBoard);
+
+
+
+                /*$tempBoard->setBoard($gameModel->getBoard()->getBoxes(true), true);
+
                 $boxes = $this->gameView->handleBoxes($gameModel);
-                //var_dump($boxes);
-                $this->board->setBoard($boxes);
-                $winnerOfThisRound = $gameModel->checkWinner($this->winner);
-                $gameModel->setPlayerTurn("Computer");
+                $gameModel->updateBoard($boxes, true);
+                $winnerOfThisRound = $gameModel->checkWinner($player);
+
+                if($winnerOfThisRound === null){
+                    $gameModel->setPlayerTurn("Computer");
+                    $miniMax = new \model\MiniMax();
+                    $result = $miniMax->miniMax($gameModel->getBoard(), $winnerOfThisRound, 2, true);
+
+                    //var_dump($result);
+                }*/
+                //$gameModel->updateBoard($this->board->getBoxes());
+                //$gameModel->setPlayerTurn("Computer");
                 //var_dump($this->board->getBoxes());
 //                $this->gameView->checkWhoIsWinner($players, $this->board);
-                if ($winnerOfThisRound === null) {
-                    $newBoard = $this->gameView->computerMove($gameModel);
+                //var_dump($winnerOfThisRound);
+                /*if ($winnerOfThisRound === null) {
+                    $miniMax = new \model\MiniMax();
+                    $result = $miniMax->miniMax($gameModel, true);
+
+                    /*$newBoard = $this->gameView->computerMove($gameModel);
                     $this->board->setBoard($newBoard);
                     //var_dump($this->board->getBoxes());
-                }
-                $winnerOfThisRound = $gameModel->checkWinner($this->winner);
+                }*/
+                //$winnerOfThisRound = $gameModel->checkWinner();
 //                $this->gameView->checkWhoIsWinner($players, $this->board);
                 //var_dump($gameModel->futurePossibleBoard());
-                if ($winnerOfThisRound != null) {
+                /*if ($winnerOfThisRound != null) {
                     $this->gameView->getWinner($winnerOfThisRound);
-                }
-                $gameModel->setPlayerTurn("Player");
+                }*/
+                //$gameModel->setPlayerTurn("Player");
             }
-            $this->view = $this->html->getHTML("Tick Tack Toe", $this->nav, $this->gameView->generateGameBoard($this->board));
+            $this->view = $this->html->getHTML("Tick Tack Toe", $this->nav, $this->gameView->generateGameBoard($gameModel->getBoard()));
         }
         else{
             $this->view = $this->html->getHTML("Tick Tack Toe", $this->nav, $this->nav->presentStartingPage());

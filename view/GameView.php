@@ -22,7 +22,7 @@ class GameView{
         $ret = "<form id='gameBoard' method='post'>";
         $ret2 = "";
 
-        $boxes = $board->getBoxes();
+        $boxes = $board->getBoxes(true);
         for($i = 0; $i <=8; $i++){
             $string = $boxes[$i];
             $ret2 .= "<select name='box$i'/>
@@ -56,32 +56,6 @@ class GameView{
         else {
             echo "<p>Please follow the rules! You may only make one move at a time.</p>";
         }
-
-        /*$previouslyEmptyBoxes = array();
-        $currentlyEmptyBoxes = array();
-        foreach($this->boxes as $box){
-            if($box === ""){
-                array_push($previouslyEmptyBoxes, $box);
-            }
-        }
-
-        foreach($newBoxes as $box){
-            if($box === ""){
-                array_push($currentlyEmptyBoxes, $box);
-            }
-        }
-        $attemptedMoves = count($previouslyEmptyBoxes)-count($currentlyEmptyBoxes);
-        var_dump($attemptedMoves);
-        if ($attemptedMoves === self::ALLOWED_MOVE) {
-
-            for($i = 0; $i <=8; $i++)
-            {
-                $this->boxes[$i] = $newBoxes[$i];
-            }
-        }
-        else{
-            echo "<p>Please follow the rules! You may only make one move at a time.</p>";
-        }*/
     }
     private function checkIfFormHasEmptyBox(\model\Board $board){
         $boxes = $board->getBoxes();
@@ -92,12 +66,6 @@ class GameView{
         }
         return false;
     }
-/*    public function checkWhoIsWinner(\model\Players $playersArray, \model\Board $board){
-        $players = $playersArray->getAllPlayers();
-        foreach ($players as $player) {
-            $this->winner->checkWinner($board, $player);
-        }
-    }*/
     public function computerMove(\model\GameModel $gameModel){
         if($this->checkIfFormHasEmptyBox($gameModel->getBoard()) && $this->winner == null){
             $i = rand(0,8);
