@@ -20,13 +20,13 @@ class Controller{
     private $nav;
     private $winner;
     private $gameView;
-    //private $board;
+    private $board;
 
     public function __construct(){
         $this->html = new \view\HTMLView("utf-8");
         $this->nav = new \view\NavigationView();
         $this->gameView = new \view\GameView();
-        //$this->board = new \model\Board(Array('', '', '', '', '', '', '', '', ''));
+        $this->board = new \model\Board(Array('', '', '', '', '', '', '', '', ''));
         $this->winner = new \model\Winner();
     }
 
@@ -36,13 +36,17 @@ class Controller{
             $computer = new \model\Player("Computer", "O");
             $players = new \model\Players();
 
-            $game = new \model\GameModel($players);
-
             $players->addPlayer($player);
             $players->addPlayer($computer);
 
+            $game = new \model\GameModel($players, $this->board);
+
             if ($this->gameView->formIsSubmitted()) {
-                $board = new \model\Board(Array('', '', '', '', '', '', '', '', ''));
+                $this->board = $game->getBoardFromSession();
+                /*$move = $this->gameView->handleBoxes($game);
+                $this->board->updateBoard($move);
+                $game->saveBoardInSession($this->board);*/
+                var_dump($this->board);
 
 
 
@@ -81,7 +85,7 @@ class Controller{
                 }*/
                 //$gameModel->setPlayerTurn("Player");
             }
-            $this->view = $this->html->getHTML("Tick Tack Toe", $this->nav, $this->gameView->generateGameBoard($gameModel->getBoard()));
+            $this->view = $this->html->getHTML("Tick Tack Toe", $this->nav, $this->gameView->generateGameBoard($this->board));
         }
         else{
             $this->view = $this->html->getHTML("Tick Tack Toe", $this->nav, $this->nav->presentStartingPage());

@@ -22,7 +22,7 @@ class GameView{
         $ret = "<form id='gameBoard' method='post'>";
         $ret2 = "";
 
-        $boxes = $board->getBoxes(true);
+        $boxes = $board->getBoard();
         for($i = 0; $i <=8; $i++){
             $string = $boxes[$i];
             $ret2 .= "<select name='box$i'/>

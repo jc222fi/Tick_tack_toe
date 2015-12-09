@@ -10,6 +10,28 @@ class Board{
     public function __construct(Array $boxes){
         $this->boxes = $boxes;
     }
+    public function getBoard(){
+        return $this->boxes;
+    }
+    public function getAvailableBoxes(){
+        $availableMoves = array();
+        for($i = 0; $i <=8; $i++)
+        {
+            if($this->boxes[$i] == ''){
+                array_push($availableMoves, $i);
+            }
+        }
+        return $availableMoves;
+    }
+    public function setBoxValue($position, $value){
+        $this->boxes[$position] = $value;
+        $this->updateBoard($this->boxes);
+    }
+    public function updateBoard(Array $boxes){
+        $this->boxes = $boxes;
+    }
+
+
     /*public function getBoxes($first){
         if($first){
             if (isset($_SESSION[self::$sessionSaveLocation])) {

@@ -7,16 +7,38 @@ require_once("Winner.php");
 require_once("Board.php");
 class GameModel{
     private $players;
-    private $player;
     private $board;
-    private $winner;
+    private static $sessionSaveLocation = "gameBoard";
 
-    public function __construct(\model\Players $players){
+    public function __construct(\model\Players $players, Board $board){
         $this->players = $players;
-        $this->board = new Board (Array('', '', '', '', '', '', '', '', ''));
-        $this->winner = new Winner();
+        $this->board = $board;
     }
-    public function getPlayers(){
+    public function saveBoardInSession($board){
+        $_SESSION[self::$sessionSaveLocation] = $board;
+        $this->$board = $board;
+    }
+    public function getBoard(){
+        return $this->board;
+    }
+    public function getBoardFromSession(){
+        if(isset($_SESSION[self::$sessionSaveLocation])){
+            $this->board = $_SESSION[self::$sessionSaveLocation];
+        }
+        return $this->board;
+    }
+    public function tryMove(Array $attempt){
+        $attemptedMove = new \model\AttemptedMove($this->board);
+        $result = $attemptedMove->tryMove($attempt);
+        return $result;
+    }
+    public function checkWinner($player){
+        $winner = new Winner();
+        $winner->checkWinner($this->board, $player);
+        return $winner->getWinner();
+    }
+
+    /*public function getPlayers(){
         return $this->players;
     }
     public function updateBoard(Array $array, $first){
@@ -28,20 +50,20 @@ class GameModel{
     public function getPlayerTurn(){
         return $this->player;
     }
-    /*public function switchPlayer(){
+    public function switchPlayer(){
         if($this->player->getSign() == "O"){
             $this->player = $this->players->getPlayerByName("Player");
         }
         else{
             $this->player = $this->players->getPlayerByName("Computer");
         }
-    }*/
+    }
     public function getBoard(){
         return $this->board;
     }
     public function availableMoves(){
         return $this->board->getAvailableBoxes();
-        /*$boxes = $this->getBoard()->getBoxes(true);
+        $boxes = $this->getBoard()->getBoxes(true);
         $availableMoves = array();
         for($i = 0; $i <=8; $i++)
         {
@@ -49,7 +71,7 @@ class GameModel{
                 array_push($availableMoves, $i);
             }
         }
-        return $availableMoves;*/
+        return $availableMoves;
     }
     public function futurePossibleBoard($move){
         $newBoard = new Board($this->board->getBoxes(true));
@@ -78,5 +100,5 @@ class GameModel{
         else{
             return true;
         }
-    }
+    }*/
 }

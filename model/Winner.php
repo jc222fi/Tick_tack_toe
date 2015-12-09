@@ -17,7 +17,7 @@ class Winner{
         return $this->winner;
     }
     private function playerInARow($board, Player $player){
-        $box = $board->getBoxes(true);
+        $box = $board->getBoard();
         if(($box[0] == $player->getSign() && $box[1] == $player->getSign() && $box[2] == $player->getSign())||
             ($box[3] == $player->getSign() && $box[4] == $player->getSign() && $box[5] == $player->getSign())||
             ($box[6] == $player->getSign() && $box[7] == $player->getSign() && $box[8] == $player->getSign())){
@@ -26,7 +26,7 @@ class Winner{
         return false;
     }
     private function playerInAColumn($board, Player $player){
-        $box = $board->getBoxes(true);
+        $box = $board->getBoard();
         if(($box[0] == $player->getSign() && $box[3] == $player->getSign() && $box[6] == $player->getSign())||
             ($box[1] == $player->getSign() && $box[4] == $player->getSign() && $box[7] == $player->getSign())||
             ($box[2] == $player->getSign() && $box[5] == $player->getSign() && $box[8] == $player->getSign())){
@@ -35,7 +35,7 @@ class Winner{
         return false;
     }
     private function playerDiagonal($board, Player $player){
-        $box = $board->getBoxes(true);
+        $box = $board->getBoard();
         if(($box[0] == $player->getSign() && $box[4] == $player->getSign() && $box[8] == $player->getSign())||
             ($box[2] == $player->getSign() && $box[4] == $player->getSign() && $box[6] == $player->getSign())){
             return true;
